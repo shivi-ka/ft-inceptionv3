@@ -20,37 +20,37 @@ def train_model(device, dataloaders, model, criterion, optimizer, num_epochs, pa
             else:
                 model.eval()   # Set model to evaluate mode
 
-        # Placeholder to accumulate loss over entire epoch
-        running_loss = 0.0
+            # Placeholder to accumulate loss over entire epoch
+            running_loss = 0.0
 
-        # Iterate over data
-        for inputs, labels in dataloaders[phase]:
-            inputs = inputs.to(device)
-            labels = labels.to(device)
+            # Iterate over data
+            for inputs, labels in dataloaders[phase]:
+                inputs = inputs.to(device)
+                labels = labels.to(device)
 
-            # Zero the parameter gradients
-            optimizer.zero_grad()
+                # Zero the parameter gradients
+                optimizer.zero_grad()
 
-            # Forward pass
-            with torch.set_grad_enabled(phase == 'train'):
-                # InceptionV3 returns a main output and an auxiliary output during training
-                if phase == 'train':
-                    outputs, aux_outputs = model(inputs)
-                    loss1 = criterion(outputs, labels)
-                    loss2 = criterion(aux_outputs, labels)
-                    loss = loss1 + 0.4 * loss2 # As recommended in InceptionV3 paper
-                else:
-                    outputs = model(inputs)
-                    loss = criterion(outputs, labels)
+                # Forward pass
+                with torch.set_grad_enabled(phase == 'train'):
+                    # InceptionV3 returns a main output and an auxiliary output during training
+                    if phase == 'train':
+                        outputs, aux_outputs = model(inputs)
+                        loss1 = criterion(outputs, labels)
+                        loss2 = criterion(aux_outputs, labels)
+                        loss = loss1 + 0.4 * loss2 # As recommended in InceptionV3 paper
+                    else:
+                        outputs = model(inputs)
+                        loss = criterion(outputs, labels)
+                    
+                    # Backward pass + optimize only if in training phase
+                    if phase == 'train':
+                        loss.backward()
+                        optimizer.step()
                 
-                # Backward pass + optimize only if in training phase
-                if phase == 'train':
-                    loss.backward()
-                    optimizer.step()
-            
-            # Accumulate running loss for the epoch
-            # Multiply by inputs.size(0) to get the total loss for this batch
-            running_loss += loss.item() * inputs.size(0)
+                # Accumulate running loss for the epoch
+                # Multiply by inputs.size(0) to get the total loss for this batch
+                running_loss += loss.item() * inputs.size(0)
         
         # Calculate average loss for the epoch
         epoch_loss = running_loss / len(dataloaders[phase].dataset) 
