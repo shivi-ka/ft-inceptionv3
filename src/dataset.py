@@ -5,16 +5,16 @@ import numpy as np
 from src import config
 
 # --- Create Custom PyTorch Dataset ---
-class PneumoniaDataset(Dataset):
-    def __init__(self, images, labels, transform=None):
+class PneumoniaDataset(Dataset):  # class dataset defined
+    def __init__(self, images, labels, transform=None): 
         self.images = images
         self.labels = labels
         self.transform = transform
 
-    def __len__(self):
+    def __len__(self): # len method that simply tells the total number of images in the dataset.
         return len(self.images)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx): # method that defines how to get a single image and its corresponding label. 
         image = self.images[idx]
         # Ensure label is a float for BCEWithLogitsLoss
         label = self.labels[idx].astype(np.float32) 
@@ -22,7 +22,7 @@ class PneumoniaDataset(Dataset):
             image = self.transform(image)
         return image, torch.from_numpy(label)
 
-def get_dataloaders(data_path, batch_size):
+def get_dataloaders(data_path, batch_size):  # function get_dataloaders loads the pneumoniamnist.npz file
     
     # Load the dataset
     try:
@@ -75,4 +75,5 @@ def get_dataloaders(data_path, batch_size):
         'test': DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     }
 
-    return dataloaders, train_labels
+    return dataloaders, train_labels  # A dictionary containing the three ready-to-use dataloaders. 
+#The train_labels array, which is needed in the main script to calculate the class weights for handling the imbalanced dataset.
