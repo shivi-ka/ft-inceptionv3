@@ -9,7 +9,7 @@ import torch.nn.functional as F
 class GradCAM:
     """
     Grad-CAM class to produce heatmaps of model activations.
-    Helps visualize where the model is "looking".
+    Helps visualize where the model is "looking". What parts of this X-ray made the model think this was pneumonia?"
     """
     def __init__(self, model, target_layer):
         self.model = model
@@ -80,7 +80,7 @@ def find_misclassified_indices(model, dataloader, device):
 
     return misclassified_indices
 
-def evaluate_model(device, dataloaders, model, threshold):
+def evaluate_model(device, dataloaders, model, threshold): # report card.
     print("\n--- Final Evaluation on Test Set ---")
 
     model.eval() # Set model to evaluation mode
