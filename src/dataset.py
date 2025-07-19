@@ -5,8 +5,8 @@ import numpy as np
 from src import config
 
 # --- Create Custom PyTorch Dataset ---
-class PneumoniaDataset(Dataset):  # class dataset defined
-    def __init__(self, images, labels, transform=None): 
+class PneumoniaDataset(Dataset):  # class dataset defined so that Pytorch can interact.
+    def __init__(self, images, labels, transform=None): # method stores images, lables and transform.
         self.images = images
         self.labels = labels
         self.transform = transform
@@ -41,7 +41,7 @@ def get_dataloaders(data_path, batch_size):  # function get_dataloaders loads th
     print(f"Test data shape: {test_images.shape}")
 
     # --- Define Transformations ---
-    # Inception-V3 requires 299x299 input. We also apply normalization
+    # Inception-V3 requires 299x299 input. 
     # as expected by ImageNet-pre-trained models.
     # Data augmentation is applied only to the training set.
 
