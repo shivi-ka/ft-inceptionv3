@@ -28,10 +28,10 @@ def main():
     model = model.to(device)
 
     # Define Loss Function
-    counts = np.bincount(train_labels.flatten()) # [ 388 3494]
-    pos_weight = torch.tensor(counts[0] / counts[1], dtype=torch.float).to(device)
+    counts = np.bincount(train_labels.flatten()) # [ 388 3494] # **detects the imbalance** by counting the number of "Normal" (0) and "Pneumonia" (1) labels
+    pos_weight = torch.tensor(counts[0] / counts[1], dtype=torch.float).to(device) #This calculates a weight to give more importance to the "pneumonia" class
     print(f"Class imbalance weight (for pneumonia class): {pos_weight.item():.2f}")
-    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+    criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight) #forcing the model to pay equal attention to both classes.
 
     # ---Step 1 of 2 for traning the model (training classifier head)---
     
@@ -43,7 +43,7 @@ def main():
             params_to_update_head.append(param)
             print(f"\tTraining: {name}")
     # Define Optimizer for classifier head
-    optimizer_head = optim.Adam(params_to_update_head, lr=config.LEARNING_RATE_HEAD)
+    optimizer_head = optim.Adam(params_to_update_head, lr=config.LEARNING_RATE_HEAD) # adjust learning rate.
 
     # Train the model with the new head
     model = train_model(device=device,
