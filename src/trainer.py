@@ -3,7 +3,7 @@ import torch
 
 def train_model(device, dataloaders, model, criterion, optimizer, num_epochs, patience):
     # Save the best model weights
-    best_model_wts = copy.deepcopy(model.state_dict())
+    best_model_wts = copy.deepcopy(model.state_dict()) # copy of the model's initial weights. 
     # Intialize best validation loss
     best_val_loss = float('inf')
     # Counter for early stopping
@@ -46,7 +46,7 @@ def train_model(device, dataloaders, model, criterion, optimizer, num_epochs, pa
                     # Backward pass + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
-                        optimizer.step()
+                        optimizer.step() # update model weights.
                 
                 # Accumulate running loss for the epoch
                 # Multiply by inputs.size(0) to get the total loss for this batch
